@@ -1,9 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
-metadata:
-  name: homepage
-spec:
-  interval: 1h
-  url: oci://ghcr.io/jameswynn/helm-charts/homepage
-  ref:
-    semver: ">=1.0.0"

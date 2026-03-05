@@ -3,10 +3,14 @@ kind: HelmRelease
 metadata:
   name: homepage
 spec:
-  chartRef:
-    kind: OCIRepository
-    name: homepage
   interval: 1h
+  chart:
+    spec:
+      chart: homepage
+      version: ">=1.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: homepage
   values:
     serviceAccount:
       create: true
@@ -20,10 +24,6 @@ spec:
         theme: dark
         color: slate
         useEqualHeights: true
-        layout:
-          Cluster:
-            style: row
-            columns: 3
       widgets:
         - kubernetes:
             cluster:
@@ -49,10 +49,3 @@ spec:
                 description: GitOps
                 href: "https://github.com/CarbonLattice/homelab"
       bookmarks: []
-    route:
-      app:
-        hostnames: ["homepage.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-            sectionName: https
