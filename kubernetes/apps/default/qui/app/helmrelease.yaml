@@ -75,16 +75,10 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.turbo.ac"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
-      media:
-        type: nfs
-        server: expanse.internal
-        path: /mnt/ceres/Media
-        globalMounts:
-          - path: /media

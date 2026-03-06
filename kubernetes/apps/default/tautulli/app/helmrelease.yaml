@@ -21,7 +21,7 @@ spec:
               tag: 2.16.1@sha256:6983eea603ee230b189f2d32e7d7fc0bb94917df735a71ba20460c4991877645
             env:
               TZ: America/New_York
-              TAUTULLI_HTTP_BASE_URL: https://tautulli.turbo.ac
+              TAUTULLI_HTTP_BASE_URL: https://tautulli.${SECRET_DOMAIN}
               TAUTULLI_HTTP_PORT: &port 80
             envFrom:
               - secretRef:
@@ -72,7 +72,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.turbo.ac"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network

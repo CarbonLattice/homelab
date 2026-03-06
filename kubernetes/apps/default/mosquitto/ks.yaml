@@ -11,6 +11,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/default/mosquitto/app
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: mosquitto
       CONTROLLER: StatefulSet

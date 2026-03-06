@@ -14,6 +14,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/default/tautulli/app
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: tautulli
   prune: true

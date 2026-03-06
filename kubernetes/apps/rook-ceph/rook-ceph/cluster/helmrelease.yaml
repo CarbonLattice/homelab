@@ -46,7 +46,7 @@ spec:
     route:
       dashboard:
         host:
-          name: rook.turbo.ac
+          name: rook.${SECRET_DOMAIN}
           path: /
           pathType: PathPrefix
         parentRefs:

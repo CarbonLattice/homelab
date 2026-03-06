@@ -8,13 +8,14 @@ spec:
   components:
     - ../../../../components/nfs-scaler
   dependsOn:
-    - name: multus-networks
-      namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/slskd/app
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: slskd
       CONTROLLER: StatefulSet

@@ -15,6 +15,7 @@ spec:
   postBuild:
     substitute:
       APP: zwave
+  suspend: true
   prune: true
   sourceRef:
     kind: GitRepository

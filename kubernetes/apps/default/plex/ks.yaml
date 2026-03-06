@@ -9,13 +9,14 @@ spec:
     - ../../../../components/nfs-scaler
     - ../../../../components/volsync
   dependsOn:
-    - name: intel-gpu-resource-driver
-      namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/plex/app
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
     substitute:
       APP: plex
       VOLSYNC_CAPACITY: 50Gi

@@ -52,7 +52,6 @@ spec:
       streams:
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: 192.168.69.124
         externalTrafficPolicy: Local
         ports:
           streams-rtsp:
@@ -66,7 +65,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.turbo.ac"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -88,18 +87,11 @@ spec:
             webrtc:
               listen: :8555
               candidates:
-                - 192.168.69.124:8555
                 - stun:8555
               ice_servers:
                 - urls:
                     - stun:stun.cloudflare.com:3478
-            streams:
-              driveway:
-                - rtspx://192.168.1.1:7441/SB74mRIu1CkoPcEq
-              garage:
-                - rtspx://192.168.1.1:7441/dFl352XtCUFREtRz
-              porch:
-                - rtspx://192.168.1.1:7441/ezkTDbaOR71GUE67
+            streams: {}
     persistence:
       config-file:
         type: configMap

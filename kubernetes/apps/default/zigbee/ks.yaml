@@ -15,6 +15,7 @@ spec:
   postBuild:
     substitute:
       APP: zigbee
+  suspend: true
   prune: true
   sourceRef:
     kind: GitRepository

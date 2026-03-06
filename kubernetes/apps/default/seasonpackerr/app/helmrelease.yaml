@@ -74,11 +74,5 @@ spec:
           http:
             port: *port
     persistence:
-      media:
-        type: nfs
-        server: expanse.internal
-        path: /mnt/ceres/Media
-        globalMounts:
-          - path: /media
       tmp:
         type: emptyDir

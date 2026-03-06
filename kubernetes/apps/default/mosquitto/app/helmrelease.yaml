@@ -56,10 +56,9 @@ spec:
       app:
         type: LoadBalancer
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: mosquitto.turbo.ac
+          external-dns.alpha.kubernetes.io/hostname: mosquitto.${SECRET_DOMAIN}
           gatus.home-operations.com/endpoint: |-
             group: services
-          lbipam.cilium.io/ips: 192.168.69.129
         externalTrafficPolicy: Local
         ports:
           mqtt:
