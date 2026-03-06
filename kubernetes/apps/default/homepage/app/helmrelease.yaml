@@ -3,49 +3,107 @@ kind: HelmRelease
 metadata:
   name: homepage
 spec:
+  chartRef:
+    kind: OCIRepository
+    name: homepage
   interval: 1h
-  chart:
-    spec:
-      chart: homepage
-      version: ">=1.0.0"
-      sourceRef:
-        kind: HelmRepository
-        name: homepage
   values:
-    serviceAccount:
-      create: true
-      name: homepage
-    enableRbac: true
-    config:
-      kubernetes:
-        mode: cluster
-      settings:
-        title: "Carbon Lattice Homelab"
-        theme: dark
-        color: slate
-        useEqualHeights: true
-      widgets:
-        - kubernetes:
-            cluster:
-              show: true
-              cpu: true
-              memory: true
-              showLabel: true
-              label: "homelab"
-            nodes:
-              show: true
-              cpu: true
-              memory: true
-              showLabel: true
-        - datetime:
-            text_size: xl
-            format:
-              timeStyle: short
-              dateStyle: short
-      services:
-        - Cluster:
-            - Flux:
-                icon: flux-cd.png
-                description: GitOps
-                href: "https://github.com/CarbonLattice/homelab"
-      bookmarks: []
+    controllers:
+      homepage:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/gethomepage/homepage
+              tag: v0.10.9
+            env:
+              HOMEPAGE_ALLOWED_HOSTS: "homepage.${SECRET_DOMAIN}"
+            resources:
+              requests:
+                cpu: 15m
+                memory: 100Mi
+              limits:
+                memory: 256Mi
+    service:
+      app:
+        ports:
+          http:
+            port: 3000
+    route:
+      app:
+        hostnames: ["homepage.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 3000
+    persistence:
+      config:
+        type: configMap
+        name: homepage-config
+        globalMounts:
+          - path: /app/config/settings.yaml
+            subPath: settings.yaml
+          - path: /app/config/widgets.yaml
+            subPath: widgets.yaml
+          - path: /app/config/services.yaml
+            subPath: services.yaml
+          - path: /app/config/bookmarks.yaml
+            subPath: bookmarks.yaml
+    configMaps:
+      config:
+        enabled: true
+        data:
+          settings.yaml: |
+            background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
+            cardBlur: md
+            theme: dark
+            headerStyle: boxed
+            hideVersion: true
+          widgets.yaml: |
+            - kubernetes:
+                cluster:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+                  label: "homelab"
+                nodes:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+            - datetime:
+                text_size: xl
+                format:
+                  timeStyle: short
+                  dateStyle: short
+            - search:
+                provider: google
+                target: _blank
+          services.yaml: |
+            - Infrastructure:
+              - Router:
+                  href: http://10.1.10.1
+                  description: Network router
+                  icon: router.svg
+              - Cloudflare:
+                  href: https://dash.cloudflare.com
+                  description: DNS & Tunnels
+                  icon: cloudflare.svg
+            - Cluster:
+              - Flux:
+                  href: https://github.com/CarbonLattice/homelab
+                  description: GitOps
+                  icon: flux-cd.png
+          bookmarks.yaml: |
+            - Homelab:
+              - Repository:
+                - href: https://github.com/CarbonLattice/homelab
+                  icon: github.svg
+            - Managed services:
+              - Cloudflare:
+                - href: https://dash.cloudflare.com
+                  icon: cloudflare.svg
